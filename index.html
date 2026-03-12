@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkyEdge</title>
+  <style>
+    @font-face {
+      font-family: 'SkyEdge';
+      src: url('sk.ttf') format('truetype');
+    }
+    @font-face {
+      font-family: 'Bold';
+      src: url('bf.otf') format('opentype');
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Bold', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ───── HEADER ───── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #000;
+    }
+
+    .logo-wrap {
+      background: #1a1a1a;
+      border-radius: 0 0 18px 0;
+      padding: 14px 36px 14px 20px;
+    }
+
+    .logo-wrap span {
+      font-family: 'SkyEdge', sans-serif;
+      font-size: 26px;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .hamburger {
+      background: #1a1a1a;
+      border-radius: 0 0 0 18px;
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      border: none;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ───── OVERLAY ───── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 150;
+    }
+    .overlay.open { display: block; }
+
+    /* ───── NAV MENU ───── */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 260px;
+      height: 100%;
+      background: #111;
+      z-index: 300;
+      padding: 70px 0 30px;
+      transition: right 0.3s ease;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.8);
+    }
+
+    .nav-menu.open { right: 0; }
+
+    .nav-menu a {
+      display: block;
+      padding: 16px 28px;
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Bold', sans-serif;
+      font-size: 17px;
+      border-bottom: 1px solid #222;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-menu a:active { background: #222; }
+
+    .nav-menu .menu-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      padding: 4px 10px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ───── HERO BANNER ───── */
+    .hero-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .hero-wrap img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .hero-text {
+      position: absolute;
+      bottom: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      width: 90%;
+      pointer-events: none;
+    }
+
+    .hero-text h2 {
+      font-family: 'Bold', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 6px;
+      white-space: nowrap;
+    }
+
+    .hero-text p {
+      font-family: 'Bold', sans-serif;
+      font-size: 13px;
+      color: #ccc;
+      white-space: nowrap;
+    }
+
+    /* ───── DOWNLOAD BUTTON ───── */
+    .btn-download {
+      display: block;
+      width: fit-content;
+      margin: 22px auto;
+      background: #fff;
+      color: #000;
+      font-family: 'Bold', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      padding: 13px 46px;
+      border-radius: 30px;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ───── DIVIDER ───── */
+    .divider {
+      height: 1px;
+      background: #222;
+      margin: 0 16px;
+    }
+
+    /* ───── VIDEOS SECTION ───── */
+    .videos-section {
+      padding: 36px 16px 30px;
+    }
+
+    .section-title {
+      font-family: 'Bold', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    .video-block {
+      width: 100%;
+      max-width: 530px;
+      aspect-ratio: 16/9;
+      background: #1e1e1e;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-block:nth-child(even) { margin-left: auto; }
+
+    .video-block iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .video-loading {
+      color: #555;
+      font-size: 14px;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* ───── BANNER 2 ───── */
+    .banner-section img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-wrap">
+      <span>SkyEdge</span>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- SIDE MENU -->
+  <nav class="nav-menu" id="navMenu">
+    <button class="menu-close" onclick="closeMenu()">✕</button>
+    <a href="#">🏠 Главная</a>
+    <a href="res/file/DataExtractor_SkyEdge_V3.zip" download>⬇️ Скачать экстрактор</a>
+    <a href="https://youtube.com/@SkyEdgeInc" target="_blank">▶️ YouTube</a>
+    <a href="https://t.me/PhoneSet_Bot" target="_blank">📱 PhoneSet Bot</a>
+  </nav>
+
+  <!-- BANNER 1 -->
+  <div class="hero-wrap">
+    <img src="SDE_Banner.png" alt="SkyEdge Data Extractor 3" />
+    <div class="hero-text">
+      <h2>Красота и быстрота</h2>
+      <p>Дизайны функции не главное главное — работа и стабильность</p>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD BUTTON -->
+  <a class="btn-download" href="DataExtractor_SkyEdge_V3.zip" download>Скачать</a>
+
+  <div class="divider"></div>
+
+  <!-- VIDEOS SECTION -->
+  <section class="videos-section">
+    <h2 class="section-title">Новые видео</h2>
+    <div id="videos-container">
+      <div class="video-block"><span class="video-loading">⏳ Загрузка...</span></div>
+      <div class="video-block" style="margin-left:auto;"><span class="video-loading">⏳ Загрузка...</span></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- BANNER 2 -->
+  <section class="banner-section">
+    <img src="PhoneSet.jpg" alt="PhoneSet" />
+  </section>
+
+  <script>
+    // ── Menu ──
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('navMenu').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
+    function closeMenu() {
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('navMenu').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+
+    // ── YouTube videos ──
+    const CHANNEL_ID = 'UCGm3CO6LPcN0NG9YqCrMy3g';
+    const feedUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + CHANNEL_ID;
+
+    // Несколько прокси — пробуем по очереди
+    const proxies = [
+      'https://api.allorigins.win/get?url=' + encodeURIComponent(feedUrl),
+      'https://corsproxy.io/?' + encodeURIComponent(feedUrl),
+      'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(feedUrl),
+    ];
+
+    function parseVideoIds(text) {
+      const ids = [];
+      // Ищем все yt:videoId теги
+      const matches = text.match(/<yt:videoId>([^<]+)<\/yt:videoId>/g) || [];
+      for (const m of matches) {
+        const id = m.replace(/<\/?yt:videoId>/g, '').trim();
+        if (id.length === 11) ids.push(id);
+        if (ids.length === 2) break;
+      }
+      return ids;
+    }
+
+    function showVideos(ids) {
+      const container = document.getElementById('videos-container');
+      container.innerHTML = '';
+      ids.forEach((id, i) => {
+        const block = document.createElement('div');
+        block.className = 'video-block';
+        if (i % 2 !== 0) block.style.marginLeft = 'auto';
+        block.innerHTML = `<iframe
+          src="https://www.youtube.com/embed/${id}?rel=0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>`;
+        container.appendChild(block);
+      });
+    }
+
+    async function loadVideos() {
+      for (const proxy of proxies) {
+        try {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 7000);
+          const res = await fetch(proxy, { signal: controller.signal });
+          clearTimeout(timer);
+          if (!res.ok) continue;
+
+          let text = '';
+          try {
+            const json = await res.json();
+            text = json.contents || JSON.stringify(json);
+          } catch {
+            text = await res.text();
+          }
+
+          if (!text.includes('yt:videoId')) continue;
+
+          const ids = parseVideoIds(text);
+          if (ids.length === 0) continue;
+
+          showVideos(ids);
+          return; // успех!
+        } catch (e) {
+          // пробуем следующий прокси
+        }
+      }
+
+      // Все прокси не сработали — показываем сообщение
+      document.getElementById('videos-container').innerHTML =
+        '<p style="color:#666;font-size:14px;padding:10px;font-family:sans-serif;">' +
+        'Для загрузки видео нужен интернет и сервер.<br>' +
+        'Загрузи сайт на GitHub Pages — и видео заработают автоматически!</p>';
+    }
+
+    loadVideos();
+  </script>
+
+</body>
+</html>
